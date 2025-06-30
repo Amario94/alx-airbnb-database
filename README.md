@@ -82,4 +82,72 @@ After analysis, the database schema satisfies all conditions for 3NF. Each entit
 
 No redesign was required as the schema was modeled using best practices from the start.
 
+-- Create the "users" table
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create the "properties" table
+CREATE TABLE properties (
+  id SERIAL PRIMARY KEY,
+  owner_id INTEGER NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  location VARCHAR(255) NOT NULL,
+  price_per_night NUMERIC(10, 2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (owner_id) REFERENCES users(id)
+);
+
+-- Create the "bookings" table
+CREATE TABLE bookings (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  property_id INTEGER NOT NULL,
+  check_in_date DATE NOT NULL,
+  check_out_date DATE NOT NULL,
+  total_price NUMERIC(10, 2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (property_id) REFERENCES properties(id)
+);
+
+-- Create the "reviews" table
+CREATE TABLE reviews (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  property_id INTEGER NOT NULL,
+  rating INTEGER CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (property_id) REFERENCES properties(id)
+);
+
+-- Indexes for performance
+
+-- Quickly look up users by email
+CREATE INDEX idx_users_email ON users(email);
+
+-- Speed up property search by location
+CREATE INDEX idx_properties_location ON properties(location);
+
+-- Optimize lookup of bookings by user
+CREATE INDEX idx_bookings_user_id ON bookings(user_id);
+
+-- Optimize lookup of bookings by property
+CREATE INDEX idx_bookings_property_id ON bookings(property_id);
+
+-- Speed up review lookup by property
+CREATE INDEX idx_reviews_property_id ON reviews(property_id);
+
+
 
