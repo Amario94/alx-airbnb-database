@@ -149,5 +149,56 @@ CREATE INDEX idx_bookings_property_id ON bookings(property_id);
 -- Speed up review lookup by property
 CREATE INDEX idx_reviews_property_id ON reviews(property_id);
 
+-- Insert sample users
+INSERT INTO users (first_name, last_name, email, password)
+VALUES 
+  ('Amarachi', 'Anya', 'amarachi@example.com', 'hashed_password_1'),
+  ('Tunde', 'Johnson', 'tunde.j@example.com', 'hashed_password_2'),
+  ('Zara', 'Obi', 'zara.obi@example.com', 'hashed_password_3');
+
+-- Insert sample properties
+INSERT INTO properties (owner_id, name, description, location, price_per_night)
+VALUES
+  (1, 'Lagos Island Apartment', 'Beautiful 2-bedroom apartment with sea view.', 'Lagos, Nigeria', 45000.00),
+  (2, 'Abuja Studio Flat', 'Compact studio perfect for solo travelers.', 'Abuja, Nigeria', 30000.00),
+  (1, 'Lekki Duplex', 'Luxury duplex near the beach.', 'Lagos, Nigeria', 80000.00);
+
+-- Insert sample bookings
+INSERT INTO bookings (user_id, property_id, check_in_date, check_out_date, total_price)
+VALUES
+  (3, 1, '2025-07-01', '2025-07-05', 180000.00),
+  (2, 2, '2025-07-10', '2025-07-12', 60000.00),
+  (3, 3, '2025-08-01', '2025-08-07', 480000.00);
+
+-- Insert sample reviews
+INSERT INTO reviews (user_id, property_id, rating, comment)
+VALUES
+  (3, 1, 5, 'Fantastic view and very clean!'),
+  (2, 2, 4, 'Nice place, but the WiFi could be better.'),
+  (3, 3, 5, 'Best stay I’ve had in Nigeria. Definitely coming back!');
+
+# Database Seeding Script
+
+This folder contains SQL scripts to populate the Airbnb clone database with sample data.
+
+## File: `seed.sql`
+
+This script inserts sample records into the following tables:
+- `users`
+- `properties`
+- `bookings`
+- `reviews`
+
+## How to Use
+
+1. Ensure your database schema is already created. If not, run the schema script first.
+2. Connect to your PostgreSQL database:
+   ```bash
+   psql -U your_username -d your_database_name
+
+\i path/to/seed.sql
+\i database-script-0x02/seed.sql
+
+
 
 
